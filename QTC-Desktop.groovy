@@ -62,7 +62,8 @@ node {
           rm -rf ${PUSH_DIR}/*
           cp -r ${RESULT_DIR}/* ${PUSH_DIR}/
           cd ${PUSH_DIR}
-          wget https://raw.githubusercontent.com/QUVNTNM-TC/DESKTOP-TC/ivybridge/link.sh && chmod +x link.sh && ./link.sh
+          wget https://raw.githubusercontent.com/QUVNTNM-TC/Build_tools/master/scripts/DESKTOP/link_desk.sh && chmod +x link_desk.sh && ./link_desk.sh
+          rm link*
           git add --all
           ''')
       }
