@@ -35,7 +35,15 @@ node {
    // env.Variant = ${Variant}
     env.WORKSPACE = '/home/jenkins/workspace/QTC-Arm'
     env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
-    env.RESULT_DIR = env.BUILD_DIR + '/x-tools' 
+
+    if (env.Variant == "7.2_kryo") {
+        env.RESULT_DIR = env.BUILD_DIR + '/x-tools/aarch64-QUVNTNM_TOOLCHAIN-linux-gnu'  
+    } else if (env.Variant == "8.x_kryo") {
+        env.RESULT_DIR = env.BUILD_DIR + '/x-tools/aarch64-QUVNTNM_TOOLCHAIN-linux-gnu'   
+    } else {
+        env.RESULT_DIR = env.BUILD_DIR + '/x-tools/arm-QUVNTNM_TOOLCHAIN-linux-gnueabihf' 
+    }
+    
     env.PUSH_DIR = env.WORKSPACE + '/TC'
 
     stage('Checkout') {
@@ -63,7 +71,7 @@ node {
           cp -r ${RESULT_DIR}/* ${PUSH_DIR}/
           cd ${PUSH_DIR}
           case "$Variant" in
-            "7.2-kryo"|"8.x-kryo") wget https://raw.githubusercontent.com/QUVNTNM-TC/Build_tools/master/scripts/ARM/link_kryo.sh && chmod +x link_kryo.sh && ./link_kryo.sh ;;
+            "7.2_kryo"|"8.x_kryo") wget https://raw.githubusercontent.com/QUVNTNM-TC/Build_tools/master/scripts/ARM/link_kryo.sh && chmod +x link_kryo.sh && ./link_kryo.sh ;;
             *) wget https://raw.githubusercontent.com/QUVNTNM-TC/Build_tools/master/scripts/ARM/link_cortex.sh && chmod +x link_cortex.sh && ./link_cortex.sh ;;
           esac
           rm link*
