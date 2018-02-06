@@ -32,6 +32,7 @@ int build(){
 
 node {
     env
+    currentBuild.description = env.Variant
     env.WORKSPACE = '/home/jenkins/workspace/QTC-Desktop'
     env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
     env.RESULT_DIR = env.BUILD_DIR + '/x-tools/x86_64-qtc-linux-gnu' 

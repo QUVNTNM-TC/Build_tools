@@ -32,6 +32,7 @@ int build(){
 
 node {
     env
+    currentBuild.description = env.Variant
     env.WORKSPACE = '/home/jenkins/workspace/QTC-Arm'
     env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
 
