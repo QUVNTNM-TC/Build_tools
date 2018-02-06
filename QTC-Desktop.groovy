@@ -35,7 +35,7 @@ node {
    // env.Variant = ${Variant}
     env.WORKSPACE = '/home/jenkins/workspace/QTC-Desktop'
     env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
-    env.RESULT_DIR = env.BUILD_DIR + '/x-tools' 
+    env.RESULT_DIR = env.BUILD_DIR + '/x-tools/x86_64-qtc-linux-gnu' 
     env.PUSH_DIR = env.WORKSPACE + '/DESKTOP-TC'
 
     stage('Checkout') {
