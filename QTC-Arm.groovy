@@ -59,7 +59,15 @@ node {
    stage('Publishing') {
        dir(env.PUSH_DIR) {
            return sh (returnStatus: true, script: '''#!/usr/bin/env bash
-           git checkout ${Variant}
+           case "$Variant" in
+             6.4_a15) VARCHECK=Q6.4-a15-neon ;;
+             7.2_a15) VARCHECK=Q7.2-a15-neon ;;
+             6.4_a9) VARCHECK=Q6.4-a9-neon ;;
+             7.2_a9) VARCHECK=Q7.2-a9-neon ;;
+             7.2_kryo) VARCHECK=Q7.2-kryo-aarch ;;
+             8.x_kryo) VARCHECK=Q8.0-kryo-aarch ;;
+            esac
+           git checkout $VARCHECK
            ''')
        }
 
