@@ -42,10 +42,9 @@ int Publish() {
       dir(env.PUSH_DIR) {
           echo "Copying files.."
           return sh (returnStatus: true, script: '''#!/usr/bin/env bash
-          cd ../
-          rm -rf ${PUSH_DIR}/*
-          cp -r ${RESULT_DIR}/* ${PUSH_DIR}/
-          cd ${PUSH_DIR}
+          rm -rf $PUSH_DIR/*
+          cp -r $RESULT_DIR/* $PUSH_DIR/
+          cd $PUSH_DIR/
 
           if [ $Arch == "DESKTOP" ]; then
           wget https://raw.githubusercontent.com/QUVNTNM-TC/Build_tools/master/scripts/DESKTOP/link_desk.sh && chmod +x link_desk.sh && ./link_desk.sh
@@ -68,10 +67,12 @@ node {
     if (env.Arch == "DESKTOP") {
         env.WORKSPACE = '/home/jenkins/workspace/QTC-Desktop'
         env.PUSH_DIR = env.WORKSPACE + '/DESKTOP-TC'
+        env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
         env.RESULT_DIR = env.BUILD_DIR + '/x-tools/x86_64-qtc-linux-gnu' 
     } else if (env.Arch == "ARM") {
         env.WORKSPACE = '/home/jenkins/workspace/QTC-Arm'
         env.PUSH_DIR = env.WORKSPACE + '/TC'
+        env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
 
         if (env.Variant == "7.2_kryo") {
             env.RESULT_DIR = env.BUILD_DIR + '/x-tools/aarch64-QUVNTNM_TOOLCHAIN-linux-gnu'  
@@ -81,7 +82,7 @@ node {
             env.RESULT_DIR = env.BUILD_DIR + '/x-tools/arm-QUVNTNM_TOOLCHAIN-linux-gnueabihf' 
         }
     }
-    env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
+    
 
     stage('Checkout') {
 
