@@ -94,9 +94,10 @@ node {
 
    stage('Build process') {
        ret = build()
-       if ( ret != 0 )
+       if ( ret != 0 ) {
        cleanUP()
        error('Build failed!')
+       }
     }
 
    stage('Publishing') {
@@ -119,9 +120,10 @@ node {
        }
 
        aret = Publish()
-       if ( aret != 0 )
+       if ( aret != 0 ) {
        cleanUP()
        error('Publish failed!')
+       }
     
       dir(env.PUSH_DIR) {
           echo "Uploading into github"
