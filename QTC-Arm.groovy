@@ -16,6 +16,9 @@ int getCONFIG() {
         wget https://raw.githubusercontent.com/QUVNTNM-TC/configs/master/config_LINARO_$Variant
         mv config_LINARO_$Variant .config
         sed -i 's@CT_LOCAL_TARBALLS_DIR="${CT_TOP_DIR}/src"@CT_LOCAL_TARBALLS_DIR="${CT_TOP_DIR}/../src"@g' .config
+        if [ "$Jobs" != 5 ]; then
+            sed -i 's|CT_PARALLEL_JOBS=5|CT_PARALLEL_JOBS='"$Jobs"'|g' .config
+        fi
         '''
     }
 }
