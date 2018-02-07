@@ -53,6 +53,7 @@ node {
    stage('Build process') {
        ret = build()
        if ( ret != 0 )
+       cleanUP()
        error('Build failed!')
     }
 

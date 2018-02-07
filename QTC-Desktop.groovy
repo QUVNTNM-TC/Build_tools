@@ -15,7 +15,9 @@ int getCONFIG() {
         sh '''#!/usr/bin/env bash
         wget https://raw.githubusercontent.com/QUVNTNM-TC/configs_desktop/master/config_$Variant
         mv config_$Variant .config
+        echo $Jobs
         sed -i 's@CT_LOCAL_TARBALLS_DIR="${CT_TOP_DIR}/src"@CT_LOCAL_TARBALLS_DIR="${CT_TOP_DIR}/../src"@g' .config
+        sed -i 's|CT_PARALLEL_JOBS=5|CT_PARALLEL_JOBS='"$Jobs"'|g' .config
         '''
     }
 }
@@ -45,6 +47,7 @@ node {
    stage('Build process') {
        ret = build()
        if ( ret != 0 )
+       cleanUP()
        error('Build failed!')
     }
 
