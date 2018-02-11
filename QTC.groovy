@@ -55,7 +55,7 @@ int Publish() {
           echo "Copying files.."
           return sh (returnStatus: true, script: '''#!/usr/bin/env bash
           rm -rf $PUSH_DIR/*
-          cp -r $RESULT_DIR/* $PUSH_DIR/
+          cp -r $RESULT_DIR/*/* $PUSH_DIR/
           cd $PUSH_DIR/
 
           if [ $Arch == "DESKTOP" ]; then
@@ -85,7 +85,6 @@ node {
         }
 
         env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
-        env.RESULT_DIR = env.BUILD_DIR + '/x-tools/x86_64-qtc-linux-gnu' 
     } else if (env.Arch == "ARM") {
         env.WORKSPACE = '/home/jenkins/workspace/QTC-Arm'
         if (env.Experimental == "true") {
@@ -93,16 +92,10 @@ node {
         } else {
         env.PUSH_DIR = env.WORKSPACE + '/TC'
         }
-        env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
-
-        if (env.Variant == "7.2_kryo") {
-            env.RESULT_DIR = env.BUILD_DIR + '/x-tools/aarch64-QUVNTNM_TOOLCHAIN-linux-gnu'  
-        } else if (env.Variant == "8.x_kryo") {
-            env.RESULT_DIR = env.BUILD_DIR + '/x-tools/aarch64-QUVNTNM_TOOLCHAIN-linux-gnu'   
-        } else {
-            env.RESULT_DIR = env.BUILD_DIR + '/x-tools/arm-QUVNTNM_TOOLCHAIN-linux-gnueabihf' 
-        }
     }
+
+    env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
+    env.RESULT_DIR = env.BUILD_DIR + '/x-tools' 
     
 
     stage('Checkout') {
@@ -168,6 +161,6 @@ node {
    stage('CleanUP') {
         dir(env.BUILD_DIR) {
         cleanUP()
+        }
     }
-   }
 }
