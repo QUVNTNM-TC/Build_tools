@@ -14,10 +14,22 @@ int getCONFIG() {
     dir(env.BUILD_DIR) {
         sh '''#!/usr/bin/env bash
 
+        if [ $Experimental == "true" ]; then
+        
+        if [ $Arch == "DESKTOP" ]; then
+        wget -O .config http://10.7.0.20:3000/sudokamikaze/configs_experimental/raw/master/config_$Variant 
+        elif [ $Arch == "ARM" ]; then
+        wget -O .config http://10.7.0.20:3000/sudokamikaze/configs_experimental/raw/master/config_LINARO_$Variant 
+        fi
+        
+        else
+        
         if [ $Arch == "DESKTOP" ]; then
         wget -O .config https://raw.githubusercontent.com/QUVNTNM-TC/configs_desktop/master/config_$Variant 
         elif [ $Arch == "ARM" ]; then
         wget -O .config https://raw.githubusercontent.com/QUVNTNM-TC/configs/master/config_LINARO_$Variant 
+        fi
+
         fi
 
         sed -i 's@CT_LOCAL_TARBALLS_DIR="${CT_TOP_DIR}/src"@CT_LOCAL_TARBALLS_DIR="${CT_TOP_DIR}/../src"@g' .config
@@ -66,12 +78,21 @@ node {
     currentBuild.description = env.Arch + '/' + env.Variant
     if (env.Arch == "DESKTOP") {
         env.WORKSPACE = '/home/jenkins/workspace/QTC-Desktop'
-        env.PUSH_DIR = env.WORKSPACE + '/DESKTOP-TC'
+        if (env.Experimental == "true") {
+            env.PUSH_DIR = env.WORKSPACE + '/DESKTOP-TC-EX'
+        } else {
+            env.PUSH_DIR = env.WORKSPACE + '/DESKTOP-TC'
+        }
+
         env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
         env.RESULT_DIR = env.BUILD_DIR + '/x-tools/x86_64-qtc-linux-gnu' 
     } else if (env.Arch == "ARM") {
         env.WORKSPACE = '/home/jenkins/workspace/QTC-Arm'
+        if (env.Experimental == "true") {
+            env.PUSH_DIR = env.WORKSPACE + '/TC-EX'
+        } else {
         env.PUSH_DIR = env.WORKSPACE + '/TC'
+        }
         env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
 
         if (env.Variant == "7.2_kryo") {
@@ -85,11 +106,18 @@ node {
     
 
     stage('Checkout') {
-
-        if (env.Arch == 'DESKTOP') {
-        checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Desktop/DESKTOP-TC'], [$class: 'CloneOption', depth: 3, noTags: true, reference: '', shallow: true, timeout: 20]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'git@github.com:QUVNTNM-TC/DESKTOP-TC.git']]])
-        } else if (env.Arch == "ARM") {
-        checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC'], [$class: 'CloneOption', depth: 3, noTags: true, reference: '', shallow: true, timeout: 20]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'git@github.com:QUVNTNM-TC/TC.git']]])
+        if (env.Experimental == 'true') {
+            if (env.Arch == 'DESKTOP') {
+                checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Desktop/DESKTOP-TC-EX'], [$class: 'CloneOption', depth: 3, noTags: true, reference: '', shallow: true, timeout: 20]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'ssh://gogs@10.7.0.20:1935/sudokamikaze/DESKTOP-TC.git']]])
+            } else if (env.Arch == "ARM") {
+                checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC-EX'], [$class: 'CloneOption', depth: 3, noTags: true, reference: '', shallow: true, timeout: 20]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'ssh://gogs@10.7.0.20:1935/sudokamikaze/TC.git']]])
+            } 
+        } else {
+            if (env.Arch == 'DESKTOP') {
+                checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Desktop/DESKTOP-TC'], [$class: 'CloneOption', depth: 3, noTags: true, reference: '', shallow: true, timeout: 20]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'git@github.com:QUVNTNM-TC/DESKTOP-TC.git']]])
+            } else if (env.Arch == "ARM") {
+                checkout([$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC'], [$class: 'CloneOption', depth: 3, noTags: true, reference: '', shallow: true, timeout: 20]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'git@github.com:QUVNTNM-TC/TC.git']]])
+            } 
         }
     }
 
