@@ -75,7 +75,12 @@ int Publish() {
 
 node {
     env
-    currentBuild.description = env.Arch + '/' + env.Variant
+    if (env.Experimental == "true") {
+        currentBuild.description = env.Arch + '/' + env.Variant + "/EXPERIMENTAL"
+    } else {
+        currentBuild.description = env.Arch + '/' + env.Variant
+    }
+
     if (env.Arch == "DESKTOP") {
         env.WORKSPACE = '/home/jenkins/workspace/QTC-Desktop'
         if (env.Experimental == "true") {
