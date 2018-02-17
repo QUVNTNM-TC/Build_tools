@@ -73,7 +73,7 @@ int Publish() {
       }
 }
 
-node {
+node(env.Host) {
     env
     if (env.Experimental == "true") {
         currentBuild.description = env.Arch + '/' + env.Variant + "/EXPERIMENTAL"
