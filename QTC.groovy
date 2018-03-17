@@ -42,7 +42,6 @@ int getCONFIG() {
 
 int build() {
     dir(env.BUILD_DIR) {
-        cleanUP()
         getCONFIG()
         return sh (returnStatus: true, script: '''#!/usr/bin/env bash
         ct-ng build
@@ -118,6 +117,13 @@ node(env.Host) {
                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'git@github.com:QUVNTNM-TC/TC.git']]]
             }
         }
+    }
+
+   stage('CleanBefore') {
+        dir(env.BUILD_DIR) {
+            cleanUP()
+        }
+   }
 
    stage('Build process') {
        ret = build()
@@ -133,10 +139,10 @@ node(env.Host) {
            if [ $Arch == "ARM" ]; then
              case "$Variant" in
              6.4_a15) VARCHECK=Q6.4-a15-neon ;;
-             7.2_a15) VARCHECK=Q7.2-a15-neon ;;
+             7.3_a15) VARCHECK=Q7.3-a15-neon ;;
              6.4_a9) VARCHECK=Q6.4-a9-neon ;;
-             7.2_a9) VARCHECK=Q7.2-a9-neon ;;
-             7.2_kryo) VARCHECK=Q7.2-kryo-aarch ;;
+             7.3_a9) VARCHECK=Q7.3-a9-neon ;;
+             7.3_kryo) VARCHECK=Q7.3-kryo-aarch ;;
              8.x_kryo) VARCHECK=Q8.0-kryo-aarch ;;
              esac
              git checkout $VARCHECK
@@ -163,9 +169,9 @@ node(env.Host) {
       }
    }
 
-   stage('CleanUP') {
+   stage('CleanAfter') {
         dir(env.BUILD_DIR) {
-        cleanUP()
+            cleanUP()
         }
     }
 }
