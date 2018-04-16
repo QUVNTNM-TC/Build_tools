@@ -87,8 +87,6 @@ node(env.Host) {
         } else {
             env.PUSH_DIR = env.WORKSPACE + '/DESKTOP-TC'
         }
-
-        env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
     } else if (env.Arch == "ARM") {
         env.WORKSPACE = '/home/jenkins/workspace/QTC-Arm'
         if (env.Experimental == "true") {
@@ -104,17 +102,17 @@ node(env.Host) {
     stage('Checkout') {
         if (env.Arch == 'DESKTOP') {
             if (env.Experimental == 'true') {
-                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Desktop/DESKTOP-TC-EX'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'ssh://git@10.7.0.20:1935/sudokamikaze/DESKTOP-TC.git']]]
+                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Desktop/DESKTOP-TC-EX'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '01481822-0d30-47db-b97a-9990399ced23', url: 'ssh://git@10.7.0.20:1935/sudokamikaze/DESKTOP-TC.git']]]
             } else {
-                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Desktop/DESKTOP-TC'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'git@github.com:QUVNTNM-TC/DESKTOP-TC.git']]]
+                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Desktop/DESKTOP-TC'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '01481822-0d30-47db-b97a-9990399ced23', url: 'git@github.com:QUVNTNM-TC/DESKTOP-TC.git']]]
             } 
             // Clone Linaro sources to reduce space
             checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'gcc-7-branch']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CheckoutOption', timeout: 20], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 20], [$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Desktop/src/GCC']], submoduleCfg: [], userRemoteConfigs: [[url: 'http://git.linaro.org/toolchain/gcc.git']]]
         } else if (env.Arch == 'ARM') {
             if (env.Experimental == 'true') {
-                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC-EX'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'ssh://git@10.7.0.20:1935/sudokamikaze/TC.git']]]
+                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC-EX'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '01481822-0d30-47db-b97a-9990399ced23', url: 'ssh://git@10.7.0.20:1935/sudokamikaze/TC.git']]]
             } else {
-                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6f973906-7fd2-4504-9aba-9526eac9fedd', url: 'git@github.com:QUVNTNM-TC/TC.git']]]
+                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '01481822-0d30-47db-b97a-9990399ced23', url: 'git@github.com:QUVNTNM-TC/TC.git']]]
             }
         }
     }
@@ -160,7 +158,7 @@ node(env.Host) {
     
       dir(env.PUSH_DIR) {
           echo "Uploading into github"
-          sshagent (credentials: ['6f973906-7fd2-4504-9aba-9526eac9fedd']) {
+          sshagent (credentials: ['01481822-0d30-47db-b97a-9990399ced23']) {
           sh('git config --global user.email "sudokamikaze@openmailbox.org" ')
           sh('git config --global user.name "QUVNTNM-Jenkins" ')
           sh('''git commit -m "Bump build of $(date +%d-%m-%Y)"''')
