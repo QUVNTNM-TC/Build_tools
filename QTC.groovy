@@ -74,10 +74,13 @@ int Publish() {
 
 node(env.Host) {
     env
+    currentBuild.description = env.Arch + '/' + env.Variant
     if (env.Experimental == "true") {
-        currentBuild.description = env.Arch + '/' + env.Variant + "/EXPERIMENTAL"
-    } else {
-        currentBuild.description = env.Arch + '/' + env.Variant
+        currentBuild.description = currentBuild.description + "/EXPERIMENTAL"
+    }
+
+    if (env.Jobs != "5") {
+        currentBuild.description = currentBuild.description + "/" + "Threads=" + env.Jobs
     }
 
     if (env.Arch == "DESKTOP") {
