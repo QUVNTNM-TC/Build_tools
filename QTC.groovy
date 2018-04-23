@@ -144,8 +144,8 @@ node(env.Host) {
         steps {
             return sh (returnStatus: true, script: '''#!/usr/bin/env bash
             cd /compiler
-            make DG_TOOLNAME=g++ DG_TARGET_HOSTNAME=127.0.0.1 DG_TARGET_USERNAME=root
-            make DG_TOOLNAME=gcc DG_TARGET_HOSTNAME=127.0.0.1 DG_TARGET_USERNAME=root
+            runtest --tool g++ --srcdir /compiler/testsuite
+            runtest --tool gcc --srcdir /compiler/testsuite
             ''')
         }
     }
