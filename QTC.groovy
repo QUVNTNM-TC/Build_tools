@@ -101,7 +101,6 @@ node(env.Host) {
 
     env.BUILD_DIR = env.WORKSPACE + '/' + env.Variant
     env.RESULT_DIR = env.BUILD_DIR + '/x-tools' 
-    env.TESTIMG_DIR = "/home/jenkins/workspace/testing-image"
     stage('Checkout') {
         if (env.Arch == 'DESKTOP') {
             if (env.Experimental == 'true') {
@@ -117,15 +116,6 @@ node(env.Host) {
             } else {
                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '**']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/QTC-Arm/TC'], [$class: 'CloneOption', noTags: true, reference: '', shallow: true, timeout: 25]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '01481822-0d30-47db-b97a-9990399ced23', url: 'git@github.com:QUVNTNM-TC/TC.git']]]
             }
-        }
-    checkout poll: false, scm: [$class: 'GitSCM', branches: [[name: 'master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/home/jenkins/workspace/testing-image']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '01481822-0d30-47db-b97a-9990399ced23', url: 'https://github.com/QUVNTNM-TC/testing-image.git']]]
-    }
-
-    stage('Updating docker img') {
-        dir(env.TESTIMG_DIR) {
-            return sh (returnStatus: true, script: '''#!/usr/bin/env bash
-            docker build -t testing-image:latest .
-            ''')
         }
     }
 
