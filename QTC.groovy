@@ -134,6 +134,18 @@ node(env.Host) {
        }
     }
 
+    stage('Testing') {
+        agent {
+            docker { image 'testing-image' }
+        }
+        steps {
+            return sh (returnStatus: true, script: '''#!/usr/bin/env bash
+            make DG_TOOLNAME=g++ DG_TARGET_HOSTNAME=127.0.0.1 DG_TARGET_USERNAME=root
+            make DG_TOOLNAME=gcc DG_TARGET_HOSTNAME=127.0.0.1 DG_TARGET_USERNAME=root
+            ''')
+        }
+    }
+
    stage('Publishing') {
        dir(env.PUSH_DIR) {
            return sh (returnStatus: true, script: '''#!/usr/bin/env bash
